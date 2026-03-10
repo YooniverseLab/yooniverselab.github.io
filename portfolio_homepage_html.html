@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Homepage</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #666666;
+      --line: rgba(0, 0, 0, 0.12);
+      --soft: rgba(0, 0, 0, 0.03);
+      --soft-hover: rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Cascadia Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    }
+
+    .page {
+      max-width: 1200px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 24px;
+    }
+
+    .lang-btn {
+      border: 1px solid #111111;
+      background: white;
+      color: #111111;
+      border-radius: 18px;
+      padding: 10px 16px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .lang-btn:hover {
+      background: #111111;
+      color: white;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px 0 40px;
+    }
+
+    .logo-box {
+      width: 180px;
+      height: 180px;
+      border: 2px dashed rgba(0, 0, 0, 0.25);
+      border-radius: 32px;
+      background: rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+
+    .logo-placeholder {
+      font-size: 14px;
+      color: var(--muted);
+      padding: 0 12px;
+    }
+
+    .site-title {
+      margin: 0;
+      font-size: clamp(40px, 7vw, 88px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .section {
+      width: 100%;
+      padding-bottom: 40px;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .section-head p {
+      margin: 10px 0 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .app-card {
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      border-radius: 28px;
+      padding: 16px;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      background: var(--soft-hover);
+      border-color: rgba(0, 0, 0, 0.24);
+    }
+
+    .app-icon {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .app-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .app-name {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        padding: 20px 16px 48px;
+      }
+
+      .logo-box {
+        width: 140px;
+        height: 140px;
+        border-radius: 24px;
+      }
+
+      .section-head h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <button class="lang-btn" id="langToggle">EN</button>
+    </div>
+
+    <main class="hero">
+    
+      <h1 class="site-title" id="siteTitle">YOUR LOGO</h1>
+    </main>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 id="sectionTitle">제가 만든 앱</h2>
+        <p id="sectionDesc">앱 이미지와 제목을 원하는 것으로 바꿔 넣으세요</p>
+      </div>
+
+      <div class="app-grid" id="appGrid"></div>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      lang: "ko"
+    };
+
+    const translations = {
+      ko: {
+        toggle: "EN",
+        sectionTitle: "제가 만든 앱",
+        sectionDesc: "앱 이미지와 제목을 원하는 것으로 바꿔 넣으세요"
+      },
+      en: {
+        toggle: "KO",
+        sectionTitle: "My Apps",
+        sectionDesc: "Replace the app images and titles with your own"
+      }
+    };
+
+    const siteConfig = {
+      title: "The/Yooniverse/Laboratory",
+      logo: "",
+      apps: [
+        {
+          title: { ko: "앱 이름 1", en: "App Name 1" },
+          image: "https://placehold.co/256x256/png?text=APP+1",
+          link: "#"
+        },
+        {
+          title: { ko: "앱 이름 2", en: "App Name 2" },
+          image: "https://placehold.co/256x256/png?text=APP+2",
+          link: "#"
+        },
+        {
+          title: { ko: "앱 이름 3", en: "App Name 3" },
+          image: "https://placehold.co/256x256/png?text=APP+3",
+          link: "#"
+        },
+        {
+          title: { ko: "앱 이름 4", en: "App Name 4" },
+          image: "https://placehold.co/256x256/png?text=APP+4",
+          link: "#"
+        }
+      ]
+    };
+
+    const langToggle = document.getElementById("langToggle");
+    const sectionTitle = document.getElementById("sectionTitle");
+    const sectionDesc = document.getElementById("sectionDesc");
+    const appGrid = document.getElementById("appGrid");
+    const siteTitle = document.getElementById("siteTitle");
+
+    function render() {
+      const t = translations[state.lang];
+      langToggle.textContent = t.toggle;
+      sectionTitle.textContent = t.sectionTitle;
+      sectionDesc.textContent = t.sectionDesc;
+      siteTitle.textContent = siteConfig.title;
+
+    
+
+      appGrid.innerHTML = "";
+
+      siteConfig.apps.forEach((app) => {
+        const card = document.createElement("a");
+        card.className = "app-card";
+        card.href = app.link || "#";
+        card.target = "_blank";
+        card.rel = "noreferrer";
+
+        card.innerHTML = `
+          <div class="app-icon">
+            <img src="${app.image}" alt="${app.title[state.lang]}" />
+          </div>
+          <div class="app-name">${app.title[state.lang]}</div>
+        `;
+
+        appGrid.appendChild(card);
+      });
+    }
+
+    langToggle.addEventListener("click", () => {
+      state.lang = state.lang === "ko" ? "en" : "ko";
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
